@@ -22,20 +22,15 @@ namespace Gui
 
             return graph;
         }
-
-        private static List<Node> sampleNodes;
-
-        static public Graph GetSample()
+        
+        static public List<Node> GetSampleNodes()
         {
-            if (sampleNodes == null)
-            {
                 var node1 = new Node() { Name = "1" };
                 var node2 = new Node() { Name = "2" };
-                sampleNodes = new List<Node> { node1, node2 };
+                var sampleNodes = new List<Node> { node1, node2 };
                 var conn = new Connection { Class = 0, To = node2, Weight = 1 };
                 node1.Connections.Add(conn);
-            }
-            return FromNodes(sampleNodes);
+            return sampleNodes;
         }
     }
 }

@@ -8,13 +8,15 @@ namespace QueueingNetworks
 {
     public class Node
     {
-        public List<double> mi { get; private set; }
-        public Dictionary<uint, double> connections { get; private set; }
+        public int Id { get; private set; }
+        public IReadOnlyList<double> Mi { get; private set; }
+        public IReadOnlyList<Connection> Connections { get; private set; }
 
-        public Node(IList<double> mi, Dictionary<uint, double> connections)
+        public Node(int id, IReadOnlyList<double> mi, IReadOnlyList<Connection> connections)
         {
-            this.mi = new List<double>(mi);
-            this.connections = new Dictionary<uint, double>(connections);
+            Id = id;
+            Mi = new List<double>(mi);
+            Connections = new List<Connection>(connections);
         }  
     }
 }

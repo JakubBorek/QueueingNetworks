@@ -1,49 +1,24 @@
-﻿<Window x:Class="Gui.MainWindow "
+﻿<Controls:MetroWindow x:Class="Gui.MainWindow "
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:i="clr-namespace:System.Windows.Interactivity"
         xmlns:graphsharp="clr-namespace:GraphSharp.Controls;assembly=GraphSharp.Controls"
         xmlns:zoom="clr-namespace:WPFExtensions.Controls;assembly=WPFExtensions"
         xmlns:local="clr-namespace:Gui"
-        Title="Window1" Height="400" Width="700" x:Name="root">
-    <Window.Resources>
-
-        <DataTemplate x:Key="demoTemplate" DataType="{x:Type local:Node}">
-            <Label Content="{Binding Path=Name, Mode=OneWay}" Tag="{Binding Path=This, Mode=OneWay}" Foreground="{Binding Path=Color}" MouseDown="onNodeMouseDown"  FontSize="58" Padding="0"/>
-        </DataTemplate>
-
-        <Style TargetType="{x:Type graphsharp:VertexControl}">
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="{x:Type graphsharp:VertexControl}">
-                        <ContentPresenter Content="{TemplateBinding Vertex}" 
-                                            ContentTemplate="{StaticResource demoTemplate}"/>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-        </Style>
-    </Window.Resources>
-    <Grid>
-        <Grid.ColumnDefinitions>
-        <ColumnDefinition Width="*" />
-        <ColumnDefinition Width="Auto" />
-        </Grid.ColumnDefinitions>
-        <zoom:ZoomControl Grid.Column="0">
-            <local:GraphLayout  x:Name="graphLayout"
-                              Graph="{Binding ElementName=root,Path=Graph}"
-                              LayoutAlgorithmType="FR" OverlapRemovalAlgorithmType="FSA"
-                              HighlightAlgorithmType="Simple"
-                                    />
-        </zoom:ZoomControl>
-        <StackPanel Orientation="Vertical" Grid.Column="1" Background="GhostWhite">
-            <TextBlock Text="{Binding ElementName=root, Path=SelectedNodeLabel, Mode=OneWay}" FontSize="24"/>
-            <Expander Header="Connections" IsEnabled="{Binding ElementName=root, Path=IsNodeSelected}">
-                <StackPanel Orientation="Vertical" Name="ConnectionsStackPanel">
-                </StackPanel>
-            </Expander>
-            <Expander Header="Parameters" IsEnabled="{Binding ElementName=root, Path=IsNodeSelected}">
-                
-            </Expander>
-        </StackPanel>
-    </Grid>
-</Window>
+        xmlns:Controls="http://metro.mahapps.com/winfx/xaml/controls"
+        Title="Queueing networks" Height="500" Width="900" x:Name="root">
+    <TabControl>
+        <TabItem Header="General ">
+            <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+                <Button Content="Load from file" Click="onLoadClicked" FontSize="48" Width="500" Height="100" Margin="10"/>
+                <Button Content="Save to file" Click="onSaveClicked" FontSize="48" Width="500" Height="100" Margin="10"/>
+                <Button Content="New" Click="onNewClicked" FontSize="48" Width="500" Height="100" Margin="10"/>
+            </StackPanel>
+        </TabItem>
+        <TabItem Header="Graph editor ">
+            <local:GraphEditor x:Name="GraphEditor"/>
+        </TabItem>
+        <TabItem Header="Optimization ">
+        </TabItem>
+    </TabControl>
+</Controls:MetroWindow>

@@ -9,7 +9,7 @@ namespace QueueingNetworks
 {
     static class TextReaderExtensions
     {
-        public static uint ReadUintLine(this TextReader reader)
+        public static uint ReadSingleUintLine(this TextReader reader)
         {
             string line = reader.ReadLine();
             return uint.Parse(line);
@@ -26,11 +26,11 @@ namespace QueueingNetworks
             var values = line.Split(' ');
             return values.Select(v => double.Parse(v)).ToList();
         }
-        public static Dictionary<uint, double> ReadDoubleDictionaryLine(this TextReader reader)
+        public static Dictionary<int, double> ReadDoubleDictionaryLine(this TextReader reader)
         {
             var list = reader.ReadDoubleListLine();
-            var dict = new Dictionary<uint, double>();
-            uint i = 0;
+            var dict = new Dictionary<int, double>();
+            int i = 0;
             foreach (var d in list)
             {
                 if (d != 0)
@@ -50,14 +50,25 @@ namespace QueueingNetworks
             }
             return result;
         }
-        public static List<Dictionary<uint, double>> ReadDoubleMatrixAsDictionaryList(this TextReader reader, uint rows)
+        public static List<Dictionary<int, double>> ReadDoubleMatrixAsDictionaryList(this TextReader reader, uint rows)
         {
-            var list = new List<Dictionary<uint, double>>();
-            for(int i = 0; i < rows; i++)
+            var list = new List<Dictionary<int, double>>();
+            for (int i = 0; i < rows; i++)
             {
                 list.Add(reader.ReadDoubleDictionaryLine());
             }
             return list;
+        }
+        public static List<Tuple<int, Connection>> ReadDoubleMatrixAsConnectionList(this TextReader reader, uint rows, int classId)
+        {
+            var connectionList = new List<Tuple<int, Connection>>();
+            var dictionaryList = reader.ReadDoubleMatrixAsDictionaryList(rows);
+            for (int i = 0; i < rows; i++)
+            {
+                connectionList.AddRange(dictionaryList[i].Select(p => Tuple.Create(i, new Connection(p.Key, classId, p.Value))));
+            }
+
+            return connectionList;
         }
     }
 }

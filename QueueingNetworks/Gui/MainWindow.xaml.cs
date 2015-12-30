@@ -1,97 +1,55 @@
-﻿using System;
-using System.Collections.ObjectModel;
-using System.ComponentModel;
+﻿using MahApps.Metro.Controls;
+using System;
+using System.Collections.Generic;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Input;
 
 namespace Gui
 {
-    public partial class MainWindow : Window, INotifyPropertyChanged
+    public partial class MainWindow : MetroWindow
     {
-        private Node selectedNode;
-        public Node SelectedNode
-        {
-            get { return selectedNode; }
-            private set
-            {
-                if (selectedNode != null) { selectedNode.Selected = false; }
-                selectedNode = value;
-                value.Selected = true;
-            }
-        }
-
-        public Graph Graph
-        {
-            get
-            {
-                return GraphBuilder.GetSample();
-            }
-        }
-
         public MainWindow()
         {
             InitializeComponent();
-            ConnectionsStackPanel.Children.Add(new Button { Content = "Btn" });
-        }
-
-        public string SelectedNodeLabel
-        {
-            get { return selectedNode != null ? "Node " + selectedNode.Name : "No node selected"; }
-        }
-
-        public bool IsNodeSelected
-        {
-            get { return selectedNode != null; }
-        }
-
-        private void onNodeMouseDown(object sender, RoutedEventArgs e)
-        {
-            var label = (Label)sender;
-            var node = (Node)label.Tag;
-            onNodeSelected(node);
         }
 
 
-        private void onNodeSelected(Node node)
+        private void onLoadClicked(object sender, RoutedEventArgs e)
         {
-            SelectedNode = node;
-            updateConnectionsList();
-            NotifyPropertyChanged("SelectedNodeLabel");
-            NotifyPropertyChanged("IsNodeSelected");
-        }
-
-        private void refresh()
-        {
-            updateConnectionsList();
-            NotifyPropertyChanged("SelectedNodeLabel");
-            NotifyPropertyChanged("IsNodeSelected");
-            NotifyPropertyChanged("Graph");
-        }
-
-        private void updateConnectionsList()
-        {
-            ConnectionsStackPanel.Children.Clear();
-            var list = ConnectionListBuilder.FromNode(SelectedNode, refresh);
-            foreach (var e in list)
+            var dlg = new Microsoft.Win32.OpenFileDialog();
+            dlg.DefaultExt = ".txt";
+            dlg.Filter = "Queueing Network Files | *.txt";
+            Nullable<bool> result = dlg.ShowDialog();
+            if(result == true)
             {
-                ConnectionsStackPanel.Children.Add(e);
+                string filename = dlg.FileName;
+                var reader = new System.IO.StreamReader(filename);
+                var network = QueueingNetworks.Network.Read(reader);
+                reader.Close();
+                GraphEditor.Nodes = NetworkConverter.NetworkToNodes(network);
             }
         }
 
-
-        #region INotifyPropertyChanged Implementation
-
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        private void NotifyPropertyChanged(String info)
+        private void onSaveClicked(object sender, RoutedEventArgs e)
         {
-            if (PropertyChanged != null)
+            var dialog = new Microsoft.Win32.SaveFileDialog();
+            dialog.DefaultExt = ".txt";
+            dialog.Filter = "Queueing Network Files | *.txt";
+            Nullable<bool> result = dialog.ShowDialog();
+            if (result == true)
             {
-                PropertyChanged(this, new PropertyChangedEventArgs(info));
+                string filename = dialog.FileName;
+                var writer = new System.IO.StreamWriter(filename);
+                var network = NetworkConverter.NodesToNetwork(GraphEditor.Nodes);
+                network.Write(writer);
+                writer.Close();
             }
+
         }
 
-        #endregion
+        private void onNewClicked(object sender, RoutedEventArgs e)
+        {
+            GraphEditor.Nodes = new List<Node>();
+        }
+
     }
 }

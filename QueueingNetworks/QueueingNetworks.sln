@@ -7,6 +7,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "QueueingNetworks", "Queuein
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gui", "Gui\Gui.csproj", "{44D5C397-3EDA-41BC-AC8C-34D23AB46786}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FitnessCalculator", "FitnessCalculator\FitnessCalculator.csproj", "{2F2F738A-784F-4B8F-9864-E16C83F95232}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Optimization", "Optimization\Optimization.csproj", "{32161A7D-C8CF-4860-8EE2-A801433B0116}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -29,6 +33,22 @@ Global
 		{44D5C397-3EDA-41BC-AC8C-34D23AB46786}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{44D5C397-3EDA-41BC-AC8C-34D23AB46786}.Release|Any CPU.Build.0 = Release|Any CPU
 		{44D5C397-3EDA-41BC-AC8C-34D23AB46786}.Release|x86.ActiveCfg = Release|Any CPU
+		{2F2F738A-784F-4B8F-9864-E16C83F95232}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2F2F738A-784F-4B8F-9864-E16C83F95232}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2F2F738A-784F-4B8F-9864-E16C83F95232}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{2F2F738A-784F-4B8F-9864-E16C83F95232}.Debug|x86.Build.0 = Debug|Any CPU
+		{2F2F738A-784F-4B8F-9864-E16C83F95232}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2F2F738A-784F-4B8F-9864-E16C83F95232}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2F2F738A-784F-4B8F-9864-E16C83F95232}.Release|x86.ActiveCfg = Release|Any CPU
+		{2F2F738A-784F-4B8F-9864-E16C83F95232}.Release|x86.Build.0 = Release|Any CPU
+		{32161A7D-C8CF-4860-8EE2-A801433B0116}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{32161A7D-C8CF-4860-8EE2-A801433B0116}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{32161A7D-C8CF-4860-8EE2-A801433B0116}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{32161A7D-C8CF-4860-8EE2-A801433B0116}.Debug|x86.Build.0 = Debug|Any CPU
+		{32161A7D-C8CF-4860-8EE2-A801433B0116}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{32161A7D-C8CF-4860-8EE2-A801433B0116}.Release|Any CPU.Build.0 = Release|Any CPU
+		{32161A7D-C8CF-4860-8EE2-A801433B0116}.Release|x86.ActiveCfg = Release|Any CPU
+		{32161A7D-C8CF-4860-8EE2-A801433B0116}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

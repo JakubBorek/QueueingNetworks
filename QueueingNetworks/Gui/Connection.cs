@@ -6,10 +6,10 @@ using System.Threading.Tasks;
 
 namespace Gui
 {
-    public struct Connection
+    public class Connection
     {
-        public Node To;
-        public uint Class;
-        public double Weight;
+        public Node To { get; set; }
+        public int Class { get; set; }
+        public double Weight { get; set; }
     }
 }
