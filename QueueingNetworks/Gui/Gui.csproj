@@ -140,8 +140,6 @@
     </Compile>
     <Compile Include="NodeFromIdProvider.cs" />
     <Compile Include="NetworkConverter.cs" />
-    <Compile Include="ViewModel\MainViewModel.cs" />
-    <Compile Include="ViewModel\ViewModelLocator.cs" />
     <Page Include="GraphEditor.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
