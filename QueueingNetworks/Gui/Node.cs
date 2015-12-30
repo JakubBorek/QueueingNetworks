@@ -14,6 +14,8 @@ namespace Gui
         public Node()
         {
             Connections = new List<Connection>();
+            Mi = new List<double>() { 0 };
+
         }
         private bool selected;
         public bool Selected
