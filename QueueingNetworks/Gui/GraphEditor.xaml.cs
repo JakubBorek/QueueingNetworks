@@ -75,6 +75,10 @@ namespace Gui
 
         private void onDeleteClicked(object sender, RoutedEventArgs e)
         {
+            if(Nodes.Count == 0)
+            {
+                return;
+            }
             int lastId = Nodes.Count - 1;
             ConnectionsDeleter.DeleteForDestination(Nodes, lastId);
             Nodes.RemoveAt(lastId);

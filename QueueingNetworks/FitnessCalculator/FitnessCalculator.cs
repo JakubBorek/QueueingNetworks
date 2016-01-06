@@ -6,15 +6,16 @@ using System.Threading.Tasks;
 
 namespace FitnessCalculator
 {
-    public interface IFitnessCalculator
+    public class FitnessCalculator : IFitnessCalculator
     {
-        double CalculateFitness(int[] solution);
-    }
-
-    public class FitnessCalculatorStub : IFitnessCalculator
-    {
+        QueueingNetworks.Network network;
+        public FitnessCalculator(QueueingNetworks.Network network)
+        {
+            this.network = network;
+        }
         public double CalculateFitness(int[] solution)
         {
+            //TODO: implementacja
             return solution.Sum();
         }
     }

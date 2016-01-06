@@ -11,6 +11,10 @@ namespace Gui
 
         public static void DeleteForDestination(List<Node> nodes, int destinationToDelete)
         {
+            if(destinationToDelete < 0  || nodes.Count == 0)
+            {
+                return;
+            }
             var nodeToDelete = nodes[destinationToDelete];
             foreach (var n in nodes)
             {

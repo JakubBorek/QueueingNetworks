@@ -10,6 +10,7 @@ namespace Gui
         public MainWindow()
         {
             InitializeComponent();
+            OptimizationControl.NetworkGetter = ()=>{ return NetworkConverter.NodesToNetwork(GraphEditor.Nodes); };
         }
 
 

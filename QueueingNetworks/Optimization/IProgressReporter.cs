@@ -7,16 +7,16 @@ using QueueingNetworks;
 
 namespace Optimization
 {
-    interface IProgressReporter
+    public interface IProgressReporter
     {
-        void ReportProgress(double fitness, QueueingNetworks.Network bestFit);
+        void ReportProgress(double fitness, int[] solution);
     }
 
-    class ProgressReporterStub : IProgressReporter
+    public class ProgressReporterStub : IProgressReporter
     {
-        public void ReportProgress(double fitness, QueueingNetworks.Network bestFit)
+        public void ReportProgress(double fitness, int[] solution)
         {
-            //do nothing
+            Console.WriteLine(fitness);
         }
     }
 }

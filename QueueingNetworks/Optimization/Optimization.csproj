@@ -43,9 +43,15 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BeesAlgorithm.cs" />
+    <Compile Include="Flower.cs" />
     <Compile Include="IProgressReporter.cs" />
+    <Compile Include="Optimization.cs" />
+    <Compile Include="OptimizationParameters.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Scout.cs" />
+    <Compile Include="Utilities.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

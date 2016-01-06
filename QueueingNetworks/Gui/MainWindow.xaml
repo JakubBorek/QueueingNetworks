@@ -1,7 +1,6 @@
 ﻿<Controls:MetroWindow x:Class="Gui.MainWindow "
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:i="clr-namespace:System.Windows.Interactivity"
         xmlns:graphsharp="clr-namespace:GraphSharp.Controls;assembly=GraphSharp.Controls"
         xmlns:zoom="clr-namespace:WPFExtensions.Controls;assembly=WPFExtensions"
         xmlns:local="clr-namespace:Gui"
@@ -19,6 +18,7 @@
             <local:GraphEditor x:Name="GraphEditor"/>
         </TabItem>
         <TabItem Header="Optimization ">
+            <local:OptimizationControl x:Name="OptimizationControl"/>
         </TabItem>
     </TabControl>
 </Controls:MetroWindow>
