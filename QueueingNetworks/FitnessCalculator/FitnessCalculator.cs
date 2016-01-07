@@ -20,7 +20,7 @@ namespace FitnessCalculator
         }
         public double CalculateFitness(int[] solution)
         {
-            //TO DO: Refector if work
+            //TO DO: Przeniesc do konstruktora + refactor
             double[,] macierzE = new double[liczbaWezlow * liczbaKlas, liczbaWezlow * liczbaKlas];
             double[] wyrazyWolne = new double[liczbaWezlow * liczbaKlas];
             double[] eIR = new double[liczbaWezlow * liczbaKlas];
