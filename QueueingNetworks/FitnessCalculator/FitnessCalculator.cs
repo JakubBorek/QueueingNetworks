@@ -69,6 +69,9 @@ namespace FitnessCalculator
             } while (wartBlad > epsilon);
 
             //STEP3: Do funkcji celu
+            lambdaIR = liczenieLambdaIR(eIR, lambdaR1);
+            rhoIR = liczenieRhoIR(solution, lambdaIR);
+            rhoI = liczenieRhoI(rhoIR);
             niezajeteI = liczbaNieZajetychKanalowWStacji(rhoI, solution);
             pi0I = prawdopodobodobienstwoPi0I(solution, rhoI);
             srDlKolejkiI = sredniaDlugoscKolejkiI(solution, rhoI, pi0I);
