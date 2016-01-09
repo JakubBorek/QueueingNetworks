@@ -10,7 +10,7 @@ namespace Gui
         public MainWindow()
         {
             InitializeComponent();
-            OptimizationControl.NetworkGetter = ()=>{ return NetworkConverter.NodesToNetwork(GraphEditor.Nodes); };
+            OptimizationControl.NetworkGetter = () => { return NetworkConverter.NodesToNetwork(GraphEditor.Nodes, GraphEditor.ClassCounts); };
         }
 
 
@@ -20,13 +20,15 @@ namespace Gui
             dlg.DefaultExt = ".txt";
             dlg.Filter = "Queueing Network Files | *.txt";
             Nullable<bool> result = dlg.ShowDialog();
-            if(result == true)
+            if (result == true)
             {
                 string filename = dlg.FileName;
                 var reader = new System.IO.StreamReader(filename);
                 var network = QueueingNetworks.Network.Read(reader);
                 reader.Close();
-                GraphEditor.Nodes = NetworkConverter.NetworkToNodes(network);
+                var editable = NetworkConverter.NetworkToNodes(network);
+                GraphEditor.Nodes = editable.Item1;
+                GraphEditor.ClassCounts = editable.Item2;
             }
         }
 
@@ -40,7 +42,7 @@ namespace Gui
             {
                 string filename = dialog.FileName;
                 var writer = new System.IO.StreamWriter(filename);
-                var network = NetworkConverter.NodesToNetwork(GraphEditor.Nodes);
+                var network = NetworkConverter.NodesToNetwork(GraphEditor.Nodes, GraphEditor.ClassCounts);
                 network.Write(writer);
                 writer.Close();
             }

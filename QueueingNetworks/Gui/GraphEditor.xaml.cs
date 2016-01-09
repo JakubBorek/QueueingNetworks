@@ -23,6 +23,17 @@ namespace Gui
             }
         }
 
+        private List<int> classCounts;
+        public List<int> ClassCounts
+        {
+            get { return classCounts; }
+            set
+            {
+                classCounts = value;
+                refresh();
+            }
+        }
+
         private List<Node> nodes;
         public List<Node> Nodes
         {
@@ -46,7 +57,9 @@ namespace Gui
         public GraphEditor()
         {
             nodes = new List<Node>();
+            classCounts = new List<int>() { 0 };
             InitializeComponent();
+            updateClassCountsList();
         }
 
         public string SelectedNodeLabel
@@ -75,7 +88,7 @@ namespace Gui
 
         private void onDeleteClicked(object sender, RoutedEventArgs e)
         {
-            if(Nodes.Count == 0)
+            if (Nodes.Count == 0)
             {
                 return;
             }
@@ -100,6 +113,7 @@ namespace Gui
             {
                 updateConnectionsList();
             }
+            updateClassCountsList();
             NotifyPropertyChanged("SelectedNodeLabel");
             NotifyPropertyChanged("IsNodeSelected");
             NotifyPropertyChanged("Graph");
@@ -114,6 +128,13 @@ namespace Gui
             {
                 ConnectionsStackPanel.Children.Add(e);
             }
+        }
+
+        private void updateClassCountsList()
+        {
+            ClassCountStackPanel.Children.Clear();
+            var list = ClassCountListBuilder.GenerateList(ClassCounts, refresh);
+            list.ForEach(e => ClassCountStackPanel.Children.Add(e));
         }
 
 

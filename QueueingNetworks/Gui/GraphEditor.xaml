@@ -47,6 +47,10 @@
             </Expander>
             <Button Content="Add node" Click="onAddNewClicked"/>
             <Button Content="Delete last node" Click="onDeleteClicked"/>
+            <Expander Header="Class Count">
+                <StackPanel Orientation="Vertical" Name="ClassCountStackPanel">
+                </StackPanel>
+            </Expander>
         </StackPanel>
     </Grid>
 </UserControl>

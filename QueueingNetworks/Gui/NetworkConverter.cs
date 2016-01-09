@@ -8,7 +8,7 @@ namespace Gui
 {
     static class NetworkConverter
     {
-        public static List<Node> NetworkToNodes(QueueingNetworks.Network network)
+        public static Tuple<List<Node>, List<int>> NetworkToNodes(QueueingNetworks.Network network)
         {
             var nodeList = new List<Node>(network.Nodes.Count);
             foreach (var node in network.Nodes)
@@ -28,22 +28,33 @@ namespace Gui
                     Weight = c.Weight,
                 }).ToList();
             }
-            return nodeList;
+            var countList = new List<int>(network.ClassMembersCounts);
+            return Tuple.Create(nodeList, countList);
         }
 
-        public static QueueingNetworks.Network NodesToNetwork(List<Node> graphNodes)
+        public static QueueingNetworks.Network NodesToNetwork(List<Node> graphNodes, List<int> counts)
         {
             var queueNodes = new List<QueueingNetworks.Node>(graphNodes.Count);
             int id = 0;
             foreach (var graphNode in graphNodes)
             {
-                queueNodes.Add(new QueueingNetworks.Node(id, graphNode.Mi, (graphNode.Connections.Select(
-                    gc => new QueueingNetworks.Connection(findIndex(gc.To, graphNodes), gc.Class - 1, gc.Weight))).ToList()));
+                queueNodes.Add(new QueueingNetworks.Node(id, getMis(counts.Count), graphNode.Connections.Select(
+                    gc => new QueueingNetworks.Connection(findIndex(gc.To, graphNodes), gc.Class - 1, gc.Weight)).ToList()));
                 id++;
             }
-            var entryPoints = new List<QueueingNetworks.EntryPoint>();
-            var network = new QueueingNetworks.Network(queueNodes, entryPoints);
+            var network = new QueueingNetworks.Network(queueNodes, counts);
             return network;
+        }
+
+        private static List<double> getMis(int count)
+        {
+            var mis = new List<double>(count);
+            for (int i = 0; i < count; i++)
+            {
+                mis.Add(1);
+            }
+            return mis;
+
         }
 
         private static int findIndex(Node node, List<Node> list)

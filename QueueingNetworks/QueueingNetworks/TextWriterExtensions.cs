@@ -21,6 +21,18 @@ namespace QueueingNetworks
             writer.WriteLine(stringBuilder);
         }
 
+        public static void WriteIntLine(this TextWriter writer, IReadOnlyList<int> values)
+        {
+            var stringBuilder = new StringBuilder();
+            foreach (var v in values)
+            {
+                stringBuilder.Append(v);
+                stringBuilder.Append(' ');
+            }
+            stringBuilder.TrimEnd();
+            writer.WriteLine(stringBuilder);
+        }
+
         public static void WriteDoubleDictionaryLine(this TextWriter writer, IDictionary<int, double> dictionary, int length)
         {
             var list = new List<double>(length);

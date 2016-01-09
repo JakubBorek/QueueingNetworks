@@ -10,12 +10,12 @@ namespace QueueingNetworks
     public class Network
     {
         public IReadOnlyList<Node> Nodes { get; private set; }
-        public IReadOnlyCollection<EntryPoint> EntryPoints { get; set; }
+        public IReadOnlyList<int> ClassMembersCounts { get; private set; }
 
-        public Network(IReadOnlyList<Node> nodes, IReadOnlyCollection<EntryPoint> entryPoints)
+        public Network(IReadOnlyList<Node> nodes, IReadOnlyList<int> classCount)
         {
             Nodes = new List<Node>(nodes);
-            EntryPoints = new List<EntryPoint>(entryPoints);
+            ClassMembersCounts = new List<int>(classCount);
         }
 
         public int ClassCount
@@ -32,11 +32,14 @@ namespace QueueingNetworks
         {
             uint nodeCount = reader.ReadSingleUintLine();
             uint classCount = reader.ReadSingleUintLine();
-            var entryPoints = new List<EntryPoint>();
+            var classMembersCount = reader.ReadIntListLine();
+            if(classMembersCount.Count != classCount)
+            {
+                throw new ArgumentException("");
+            }
             var connections = new List<Tuple<int, Connection>>();
             for (int i = 0; i < classCount; i++)
             {
-                entryPoints.AddRange(reader.ReadDoubleDictionaryLine().Select((pair) => new EntryPoint(pair.Key, i, pair.Value)));
                 connections.AddRange(reader.ReadDoubleMatrixAsConnectionList(nodeCount, i));
             }
             var miMatrix = reader.ReadDoubleMatrix(nodeCount);
@@ -45,7 +48,7 @@ namespace QueueingNetworks
             {
                 nodes.Add(new Node(i, miMatrix[i], connections.Where(p => p.Item1 == i).Select(p => p.Item2).ToList()));
             }
-            var network = new Network(nodes, entryPoints);
+            var network = new Network(nodes, classMembersCount);
             return network;
         }
 
@@ -53,10 +56,11 @@ namespace QueueingNetworks
         {
             writer.WriteLine(Nodes.Count);
             writer.WriteLine(ClassCount);
-            for(int i = 0; i < ClassCount; i++)
+            writer.WriteIntLine(ClassMembersCounts);
+
+            for (int i = 0; i < ClassCount; i++)
             {
-                writer.WriteDoubleDictionaryLine(EntryPoints.Where(ep => ep.Class == i).ToDictionary(ep => ep.Node, ep => ep.Lambda), Nodes.Count);
-                foreach(var n in Nodes)
+                foreach (var n in Nodes)
                 {
                     writer.WriteDoubleDictionaryLine(n.Connections.Where(c => c.Class == i).ToDictionary(c => c.Destination, c => c.Weight), Nodes.Count);
                 }

@@ -26,6 +26,13 @@ namespace QueueingNetworks
             var values = line.Split(' ');
             return values.Select(v => double.Parse(v)).ToList();
         }
+
+        public static List<int> ReadIntListLine(this TextReader reader)
+        {
+            string line = reader.ReadLine();
+            var values = line.Split(' ');
+            return values.Select(v => int.Parse(v)).ToList();
+        }
         public static Dictionary<int, double> ReadDoubleDictionaryLine(this TextReader reader)
         {
             var list = reader.ReadDoubleListLine();
