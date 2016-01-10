@@ -42,14 +42,13 @@
                 <StackPanel Orientation="Vertical" Name="ConnectionsStackPanel">
                 </StackPanel>
             </Expander>
-            <Expander Header="Parameters" IsEnabled="{Binding ElementName=root, Path=IsNodeSelected}">
-                <Label>Nothing here yet</Label>
+            <Expander Header="Mi" IsEnabled="{Binding ElementName=root, Path=IsNodeSelected}">
+                <StackPanel Orientation="Vertical" Name="MiStackPanel"/>
             </Expander>
             <Button Content="Add node" Click="onAddNewClicked"/>
             <Button Content="Delete last node" Click="onDeleteClicked"/>
             <Expander Header="Class Count">
-                <StackPanel Orientation="Vertical" Name="ClassCountStackPanel">
-                </StackPanel>
+                <StackPanel Orientation="Vertical" Name="ClassCountStackPanel"/>
             </Expander>
         </StackPanel>
     </Grid>

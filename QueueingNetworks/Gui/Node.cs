@@ -44,6 +44,19 @@ namespace Gui
 
         public List<double> Mi { get; set; }
 
+        public void UpdateMiLength(int length)
+        {
+            while (Mi.Count < length)
+            {
+                Mi.Add(0);
+            }
+
+            while (Mi.Count > length)
+            {
+                Mi.RemoveAt(Mi.Count - 1);
+            }
+        }
+
         #region INotifyPropertyChanged Implementation
 
         public event PropertyChangedEventHandler PropertyChanged;

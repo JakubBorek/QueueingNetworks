@@ -103,6 +103,7 @@ namespace Gui
         {
             SelectedNode = node;
             updateConnectionsList();
+            updateMiList();
             NotifyPropertyChanged("SelectedNodeLabel");
             NotifyPropertyChanged("IsNodeSelected");
         }
@@ -112,6 +113,7 @@ namespace Gui
             if (selectedNode != null)
             {
                 updateConnectionsList();
+                updateMiList();
             }
             updateClassCountsList();
             NotifyPropertyChanged("SelectedNodeLabel");
@@ -127,6 +129,16 @@ namespace Gui
             foreach (var e in list)
             {
                 ConnectionsStackPanel.Children.Add(e);
+            }
+        }
+
+        private void updateMiList()
+        {
+            MiStackPanel.Children.Clear();
+            var list = MiListBuilder.FromNode(SelectedNode, ClassCounts.Count);
+            foreach (var e in list)
+            {
+                MiStackPanel.Children.Add(e);
             }
         }
 

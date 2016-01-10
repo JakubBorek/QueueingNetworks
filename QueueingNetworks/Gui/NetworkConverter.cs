@@ -38,7 +38,7 @@ namespace Gui
             int id = 0;
             foreach (var graphNode in graphNodes)
             {
-                queueNodes.Add(new QueueingNetworks.Node(id, getMis(counts.Count), graphNode.Connections.Select(
+                queueNodes.Add(new QueueingNetworks.Node(id, getMis(graphNode, counts.Count), graphNode.Connections.Select(
                     gc => new QueueingNetworks.Connection(findIndex(gc.To, graphNodes), gc.Class - 1, gc.Weight)).ToList()));
                 id++;
             }
@@ -46,14 +46,10 @@ namespace Gui
             return network;
         }
 
-        private static List<double> getMis(int count)
+        private static List<double> getMis(Node node, int count)
         {
-            var mis = new List<double>(count);
-            for (int i = 0; i < count; i++)
-            {
-                mis.Add(1);
-            }
-            return mis;
+            node.UpdateMiLength(count);
+            return node.Mi;
 
         }
 
