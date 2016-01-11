@@ -23,7 +23,7 @@ namespace Optimization
             Random rn = new Random();
             for (int i = 0; i < nodeAmounts; i++)
             {
-                solution[i] = rn.Next() % processorsMaxAmount;
+                solution[i] = rn.Next() % processorsMaxAmount + 1;
             }
             computeSolutionValue();
         }
@@ -32,6 +32,9 @@ namespace Optimization
         {
             //TODO zaimplementowaæ to
             Flower flower = new Flower();
+            Random rn = new Random();
+            flower.solution = this.solution;
+            flower.solution[rn.Next() % nodeAmounts] = rn.Next() % processorsMaxAmount + 1;
             flower.computeSolutionValue();
             return flower;
         }

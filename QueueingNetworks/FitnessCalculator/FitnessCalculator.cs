@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MathNet.Numerics.LinearAlgebra;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -11,12 +12,20 @@ namespace FitnessCalculator
         QueueingNetworks.Network network;
         public int liczbaWezlow;
         public int liczbaKlas;
+        public int K;
 
         public FitnessCalculator(QueueingNetworks.Network network)
         {
             this.network = network;
             liczbaWezlow = network.Nodes.Count;
             liczbaKlas = network.ClassCount;
+            K = 0;
+
+            for (int i=0; i < liczbaKlas; i++)
+            {
+                K = K + network.ClassMembersCounts[i];
+            }
+          
         }
         public double CalculateFitness(int[] solution)
         {
@@ -27,7 +36,7 @@ namespace FitnessCalculator
             double[] lambdaIR = new double[liczbaWezlow * liczbaKlas];
             double[] rhoIR = new double[liczbaWezlow * liczbaKlas];
             double[] rhoI = new double[liczbaWezlow];
-            double[] Pmi = new double[liczbaWezlow * liczbaKlas];
+            double[] Pmi = new double[liczbaWezlow];
             double[] kIR = new double[liczbaWezlow * liczbaKlas];
             double[] kR = new double[liczbaKlas];
             double[] fixIR = new double[liczbaWezlow * liczbaKlas];
@@ -39,17 +48,28 @@ namespace FitnessCalculator
             double[] srDlKolejkiI = new double[liczbaWezlow];
             double wartBlad;
             double epsilon = 0.00001;
-            int K = 100; //LICZBA ZGLOSZEN - powinna być podawana
 
             for (int i = 0; i < liczbaKlas; i++)
             {
                 lambdaR1[i] = 0.00001;
             }
-      
+
+            for (int i = 0; i < liczbaKlas*liczbaWezlow; i++)
+            {
+                if (i % liczbaWezlow == 0)
+                {
+                    wyrazyWolne[i] = 1;
+                }       
+            }
+
 
             //STEP1: Wyznaczanie eIR.. tylko raz potrzebne
             macierzE = liczenieMacierzyE();
-            eIR = GaussElimination(macierzE, wyrazyWolne, liczbaWezlow * liczbaKlas);
+
+            var A = Matrix<double>.Build.DenseOfArray(macierzE);
+            var b = Vector<double>.Build.Dense(wyrazyWolne);
+            var x = A.Solve(b);
+            eIR = x.ToArray();
 
             //STEP2: Parametry (zależne od iteracji i od aktualnego rozwiązania)
             do
@@ -58,8 +78,8 @@ namespace FitnessCalculator
                 rhoIR = liczenieRhoIR(solution, lambdaIR);
                 rhoI = liczenieRhoI(rhoIR);
                 Pmi = liczeniePmi(solution, rhoI);
-                kIR = liczenieKIR(solution, rhoIR, rhoI, K, Pmi);
-                kR = liczenieSumKir(kIR);
+                kIR = liczenieKIR(solution, rhoIR, rhoI, K, Pmi); //  tylko debug
+                kR = liczenieSumKir(kIR);                         //  tylko debug
                 fixIR = liczeniefixIR(eIR, rhoIR, rhoI, K, Pmi, solution);
                 fixR = liczenieSumFixR(fixIR);
                 lambdaR2 = liczenieLambdaR(fixR, kR);
@@ -72,11 +92,63 @@ namespace FitnessCalculator
             lambdaIR = liczenieLambdaIR(eIR, lambdaR1);
             rhoIR = liczenieRhoIR(solution, lambdaIR);
             rhoI = liczenieRhoI(rhoIR);
+            Pmi = liczeniePmi(solution, rhoI);
+            kIR = liczenieKIR(solution, rhoIR, rhoI, K, Pmi); //TO DO: To musi być w GUI
+            kR = liczenieSumKir(kIR);
             niezajeteI = liczbaNieZajetychKanalowWStacji(rhoI, solution);
             pi0I = prawdopodobodobienstwoPi0I(solution, rhoI);
             srDlKolejkiI = sredniaDlugoscKolejkiI(solution, rhoI, pi0I);
 
             return funkcjaCelu(srDlKolejkiI, niezajeteI);
+        }
+
+        public double[] GaussaSeidela(double[,] A, double[] b, int n, double eps)
+        {
+            double tmp1;
+            double tmp2;
+            double[] x = new double[n];
+            double[] x1 = new double[n];
+            double sumx, sumx1;
+            int count = 0;
+            for (int i = 0; i < n; i++)
+            {
+                x1[i] = b[i] / A[i, i];
+            }
+
+            do
+            {
+                for (int i = 0; i < n; i++)
+                {
+                    x[i] = x1[i];
+                }
+
+                for (int i = 0; i < n; i++)
+                {
+                    tmp1 = 0;
+                    tmp2 = 0;
+                    for (int j = 0; j < i; j++)
+                    {
+                        tmp1 += A[i, j] * x1[j];
+                    }
+                    for (int j = i + 1; j < n; j++)
+                    {
+                        tmp2 += A[i, j] * x[j];
+                    }
+                    x1[i] = (1.0 / A[i, i]) * (b[i] - tmp1 - tmp2);
+                }
+
+                sumx = 0;
+                sumx1 = 0;
+                for (int i = 0; i < n; i++)
+                {
+                    sumx += x[i];
+                    sumx1 += x1[i];
+                }
+
+                ++count;
+            } while (Math.Abs(sumx - sumx1) > eps);
+
+            return x1;
         }
 
         public int silnia(int i)
@@ -105,7 +177,14 @@ namespace FitnessCalculator
                         {
                             if (i == j + k * liczbaWezlow)
                             {
-                                macierzE[i, j + k * liczbaWezlow] = network.Nodes[j].GetTransitionProbability(i % liczbaWezlow, k) - 1;
+                                if (i % liczbaWezlow == 0)
+                                {
+                                    macierzE[i, j + k * liczbaWezlow] = network.Nodes[j].GetTransitionProbability(i % liczbaWezlow, k);
+                                }
+                                else
+                                {
+                                    macierzE[i, j + k * liczbaWezlow] = network.Nodes[j].GetTransitionProbability(i % liczbaWezlow, k) - 1;
+                                }
                             }
                             else
                             {
@@ -156,22 +235,22 @@ namespace FitnessCalculator
 
         public double[] liczeniePmi(int[] m, double[] rho)
         {
-            double[] Pmi = new double[liczbaWezlow * liczbaKlas];
+            double[] Pmi = new double[liczbaWezlow];
 
             double tempSum;
 
             for (int i = 0; i < liczbaWezlow; i++)
             {
                 tempSum = 0;
-                for (int k = 0; k < m[i] - 1; k++)
+                for (int k = 0; k <= m[i] - 1; k++)
                 {
                     tempSum = tempSum + Math.Pow(m[i] * rho[i], k) / silnia(k);
                                 
                 }
 
                 Pmi[i] = (Math.Pow(rho[i] * m[i], m[i]) / (silnia(m[i]) * (1 - rho[i]))) *
-                            1 / (tempSum + Math.Pow(m[i] * rho[i], m[i]) / silnia(m[i]) *
-                                    (1 / (1 - rho[i])));
+                            (1 / (tempSum + (Math.Pow(m[i] * rho[i], m[i]) / silnia(m[i])) *
+                                    (1 / (1 - rho[i]))));
             }
 
             return Pmi;
@@ -208,7 +287,7 @@ namespace FitnessCalculator
             }
 
             return kR;
-        } 
+        }
 
         public double[] liczeniefixIR(double[] eIR, double[] rhoIR, double[] rho, int K, double[] Pmi, int[] m)
         {
@@ -250,10 +329,11 @@ namespace FitnessCalculator
 
             for (int i = 0; i < liczbaKlas; i++)
             {
-                lambdaR[i] = kR[i] + fixR[i];
+                //lambdaR[i] = kR[i] / fixR[i];
+                lambdaR[i] = network.ClassMembersCounts[i] / fixR[i]; ;
             }
 
-            return kR;
+            return lambdaR;
         }
 
         public double blad(double[] lambda1R, double[] lambda2R)
@@ -289,7 +369,7 @@ namespace FitnessCalculator
             for (int i = 0; i < liczbaWezlow; i++)
             {
                 tempSum = 0;
-                for (int k = 0; k < m[i] - 1; k++)
+                for (int k = 0; k <= m[i] - 1; k++)
                 {
                     tempSum = tempSum + Math.Pow(rhoI[i], k) / silnia(k);
                 }
