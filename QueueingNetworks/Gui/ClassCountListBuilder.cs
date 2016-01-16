@@ -45,7 +45,7 @@ namespace Gui
             var btn = new Button { Content = "Add" };
             btn.Click += (_1, _2) =>
             {
-                counts.Add(0);
+                counts.Add(1);
                 refreshAction();
             };
             return btn;

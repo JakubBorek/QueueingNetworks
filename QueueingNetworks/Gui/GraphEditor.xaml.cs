@@ -76,7 +76,7 @@ namespace Gui
         public GraphEditor()
         {
             nodes = new List<Node>();
-            classCounts = new List<int>() { 0 };
+            classCounts = new List<int>() { 1 };
             InitializeComponent();
             updateClassCountsList();
         }

@@ -145,6 +145,7 @@
     </ApplicationDefinition>
     <Compile Include="Connection.cs" />
     <Compile Include="ClassCountListBuilder.cs" />
+    <Compile Include="KirListBuilder.cs" />
     <Compile Include="MiListBuilder.cs" />
     <Compile Include="ConnectionListBuilder.cs" />
     <Compile Include="ConnectionsDeleter.cs" />

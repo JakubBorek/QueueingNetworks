@@ -46,12 +46,24 @@ namespace Gui
         {
             PlotPoints.Add(new OxyPlot.DataPoint(nextPointIndex, fitness));
             var solutionText = getSolutionText(solution);
-            this.Dispatcher.Invoke((Action)(() =>
+            this.Dispatcher.Invoke(() =>
             {
                 SolutionLabel.Content = solutionText;
+                updateKir(kir);
                 Plot.InvalidatePlot();
-            }));
+            });
             nextPointIndex++;
+        }
+
+        private void updateKir(double[][] kir)
+        {
+            var kirList = KirListBuilder.FromMatrix(kir);
+            KirStackPanel.Children.Clear();
+            foreach (var e in kirList)
+            {
+                KirStackPanel.Children.Add(e);
+            }
+
         }
         private string getSolutionText(int[] solution)
         {

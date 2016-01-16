@@ -51,7 +51,7 @@ namespace Optimization
         {
             int classCount = kir.Length / nodesCount;
             var matrix = new double[nodesCount][];
-            for (int n = 0; n < classCount; n++)
+            for (int n = 0; n < nodesCount; n++)
             {
                 matrix[n] = new double[classCount];
                 for (int c = 0; c < classCount; c++)

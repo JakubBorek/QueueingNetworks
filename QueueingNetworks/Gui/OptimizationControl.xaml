@@ -34,9 +34,12 @@
                 <StackPanel Orientation="Vertical">
                     <StackPanel Orientation="Horizontal">
                         <Label FontSize="20" FontWeight="Bold">Best solution:</Label>
-                        <Label Name="SolutionLabel" FontSize="20"/>
+                        <Label Name="SolutionLabel" FontSize="20" FontWeight="Bold"/>
                     </StackPanel>
-                    <Label FontSize="12" Foreground="#B2000000">For detailed information view GraphEditor tab</Label>
+                    <StackPanel Orientation="Horizontal">
+                        <Label FontSize="18">Kir:</Label>
+                        <StackPanel Name="KirStackPanel" Orientation="Horizontal"/>
+                    </StackPanel>
                 </StackPanel>
             </Border>
 
