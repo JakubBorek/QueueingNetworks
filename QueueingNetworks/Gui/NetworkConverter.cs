@@ -14,6 +14,7 @@ namespace Gui
             foreach (var node in network.Nodes)
             {
                 var graphNode = new Node();
+                graphNode.Type = node.Type;
                 graphNode.Name = (node.Id + 1).ToString();
                 graphNode.Mi = new List<double>(node.Mi);
                 nodeList.Add(graphNode);
@@ -38,7 +39,7 @@ namespace Gui
             int id = 0;
             foreach (var graphNode in graphNodes)
             {
-                queueNodes.Add(new QueueingNetworks.Node(id, getMis(graphNode, counts.Count), getConnections(graphNode, counts.Count, graphNodes)));
+                queueNodes.Add(new QueueingNetworks.Node(id, graphNode.Type, getMis(graphNode, counts.Count), getConnections(graphNode, counts.Count, graphNodes)));
                 id++;
             }
             var network = new QueueingNetworks.Network(queueNodes, counts);

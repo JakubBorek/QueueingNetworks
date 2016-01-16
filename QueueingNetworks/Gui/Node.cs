@@ -15,13 +15,12 @@ namespace Gui
         {
             Connections = new List<Connection>();
             Mi = new List<double>() { 1 };
-            type = NodeType.Type1;
+            type = QueueingNetworks.Node.NodeType.Type1;
 
         }
 
-        public enum NodeType { Type1, Type3 };
-        private NodeType type;
-        public NodeType Type
+        private QueueingNetworks.Node.NodeType type;
+        public QueueingNetworks.Node.NodeType Type
         {
             get { return type; }
             set

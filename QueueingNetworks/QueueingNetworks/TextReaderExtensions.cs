@@ -77,5 +77,12 @@ namespace QueueingNetworks
 
             return connectionList;
         }
+
+        public static List<Node.NodeType> ReadNodeTypesLine(this TextReader reader)
+        {
+            string line = reader.ReadLine();
+            var values = line.Split(' ');
+            return values.Select(v => v == "1" ? Node.NodeType.Type1 : Node.NodeType.Type3).ToList();
+        }
     }
 }

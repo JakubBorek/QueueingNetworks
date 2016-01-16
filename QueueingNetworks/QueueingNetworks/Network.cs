@@ -33,7 +33,12 @@ namespace QueueingNetworks
             uint nodeCount = reader.ReadSingleUintLine();
             uint classCount = reader.ReadSingleUintLine();
             var classMembersCount = reader.ReadIntListLine();
-            if(classMembersCount.Count != classCount)
+            if (classMembersCount.Count != classCount)
+            {
+                throw new ArgumentException("");
+            }
+            var nodeTypes = reader.ReadNodeTypesLine();
+            if (nodeTypes.Count != nodeCount)
             {
                 throw new ArgumentException("");
             }
@@ -46,7 +51,7 @@ namespace QueueingNetworks
             var nodes = new List<Node>((int)nodeCount);
             for (int i = 0; i < nodeCount; i++)
             {
-                nodes.Add(new Node(i, miMatrix[i], connections.Where(p => p.Item1 == i).Select(p => p.Item2).ToList()));
+                nodes.Add(new Node(i, nodeTypes[i], miMatrix[i], connections.Where(p => p.Item1 == i).Select(p => p.Item2).ToList()));
             }
             var network = new Network(nodes, classMembersCount);
             return network;
@@ -57,7 +62,7 @@ namespace QueueingNetworks
             writer.WriteLine(Nodes.Count);
             writer.WriteLine(ClassCount);
             writer.WriteIntLine(ClassMembersCounts);
-
+            writer.WriteNodeTypeList(Nodes.Select(n => n.Type).ToList());
             for (int i = 0; i < ClassCount; i++)
             {
                 foreach (var n in Nodes)

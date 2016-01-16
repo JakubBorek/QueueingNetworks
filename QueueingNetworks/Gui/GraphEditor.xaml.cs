@@ -57,16 +57,16 @@ namespace Gui
 
         public int SelectedNodeType
         {
-            get { return selectedNode != null ? selectedNode.Type == Node.NodeType.Type1 ? 0 : 1 : -1; }
+            get { return selectedNode != null ? selectedNode.Type == QueueingNetworks.Node.NodeType.Type1 ? 0 : 1 : -1; }
             set
             {
                 if (value == 0)
                 {
-                    selectedNode.Type = Node.NodeType.Type1;
+                    selectedNode.Type = QueueingNetworks.Node.NodeType.Type1;
                 }
                 else if (value == 1)
                 {
-                    selectedNode.Type = Node.NodeType.Type3;
+                    selectedNode.Type = QueueingNetworks.Node.NodeType.Type3;
                 }
                 NotifyPropertyChanged("SelectedNodeType");
             }
