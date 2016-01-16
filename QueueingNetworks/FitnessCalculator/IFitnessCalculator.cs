@@ -8,14 +8,6 @@ namespace FitnessCalculator
 {
     public interface IFitnessCalculator
     {
-        double CalculateFitness(int[] solution);
-    }
-
-    public class FitnessCalculatorStub : IFitnessCalculator
-    {
-        public double CalculateFitness(int[] solution)
-        {
-            return solution.Sum();
-        }
+        Tuple<double, double[]> CalculateFitness(int[] solution);
     }
 }

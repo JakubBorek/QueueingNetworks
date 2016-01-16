@@ -15,7 +15,7 @@ namespace Optimization
         private static int bestSolutionsAmount;
         private static bool cancelPending;
         public static bool Running { get; private set; }
-        public static Tuple<int[], double> BestSolution { get; private set; }
+        public static Tuple<int[], double, double[]> BestSolution { get; private set; }
 
         public static IFitnessCalculator FitnessCalculator { get; set; }
 
@@ -32,7 +32,8 @@ namespace Optimization
             Running = true;
             while (!isStopConditionFulfilled())
             {
-                BestSolution = Tuple.Create((int[])scouts.First().getFlower().getSolution().Clone(), scouts.First().getFlower().getSolutionValue());
+                var bestFlower = scouts.First().getFlower();
+                BestSolution = Tuple.Create((int[])bestFlower.getSolution().Clone(), bestFlower.getSolutionValue(), bestFlower.Kir);
                 //wybieramy elitarnych Skautów - s¹ to Skauci z elitarnymi kwiatami 
                 List<Scout> scoutsWithEliteFlowers = scouts.GetRange(0, elisteSolutionsAmount);
                 //wybieramy najlpeszych Skautów - s¹ to Skauci z najlepszymi kwiatami 
@@ -54,7 +55,7 @@ namespace Optimization
         public static void Cancel()
         {
             cancelPending = true;
-        }   
+        }
 
         private static bool isStopConditionFulfilled()
         {

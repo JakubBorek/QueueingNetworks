@@ -11,13 +11,13 @@ namespace Optimization
     {
         public static void Run(OptimizationParameters parameters)
         {
-            if(BeesAlgorithm.Running)
+            if (BeesAlgorithm.Running)
             {
-                BeesAlgorithm.Cancel();     
-                while(BeesAlgorithm.Running)
+                BeesAlgorithm.Cancel();
+                while (BeesAlgorithm.Running)
                 {
                     Thread.Sleep(5);
-                }          
+                }
             }
             new Thread(() =>
             {
@@ -37,13 +37,29 @@ namespace Optimization
                 {
                     Thread.Sleep(100);
                 }
-                while(BeesAlgorithm.Running)
+                while (BeesAlgorithm.Running)
                 {
                     var solution = BeesAlgorithm.BestSolution;
-                    parameters.ProgressReporter.ReportProgress(solution.Item2, solution.Item1);
+                    var kirMatrix = sanitizeKirVector(solution.Item3, solution.Item1.Count());
+                    parameters.ProgressReporter.ReportProgress(solution.Item2, solution.Item1, kirMatrix);
                     Thread.Sleep(500);
                 }
             }).Start();
+        }
+
+        private static double[][] sanitizeKirVector(double[] kir, int nodesCount)
+        {
+            int classCount = kir.Length / nodesCount;
+            var matrix = new double[nodesCount][];
+            for (int n = 0; n < classCount; n++)
+            {
+                matrix[n] = new double[classCount];
+                for (int c = 0; c < classCount; c++)
+                {
+                    matrix[n][c] = kir[c * classCount + n];
+                }
+            }
+            return matrix;
         }
 
         public static void Stop()

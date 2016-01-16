@@ -12,6 +12,7 @@ namespace Optimization
         private int nodeAmounts = BeesAlgorithm.getNodesAmount();
         private int[] solution;
         private double solutionValue;
+        public double[] Kir { get; set; }
 
         public Flower()
         {
@@ -42,7 +43,8 @@ namespace Optimization
         private void computeSolutionValue()
         {
             var fitness = BeesAlgorithm.FitnessCalculator.CalculateFitness(solution);
-            setSolutionValue(fitness);
+            setSolutionValue(fitness.Item1);
+            Kir = fitness.Item2;
         }
 
         public double getSolutionValue()

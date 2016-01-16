@@ -27,8 +27,6 @@ namespace Gui
         public OptimizationControl()
         {
             PlotPoints = new List<OxyPlot.DataPoint>();
-            PlotPoints.Add(new OxyPlot.DataPoint(1, 1));
-            PlotPoints.Add(new OxyPlot.DataPoint(2, 2));
             InitializeComponent();
             LineSeries.ItemsSource = PlotPoints;
             this.Dispatcher.ShutdownStarted += Dispatcher_ShutdownStarted;
@@ -44,14 +42,26 @@ namespace Gui
             Optimization.Optimization.Stop();
         }
 
-        public void ReportProgress(double fitness, int[] solution)
+        public void ReportProgress(double fitness, int[] solution, double[][] kir)
         {
             PlotPoints.Add(new OxyPlot.DataPoint(nextPointIndex, fitness));
+            var solutionText = getSolutionText(solution);
             this.Dispatcher.Invoke((Action)(() =>
             {
+                SolutionLabel.Content = solutionText;
                 Plot.InvalidatePlot();
             }));
             nextPointIndex++;
+        }
+        private string getSolutionText(int[] solution)
+        {
+            var builder = new StringBuilder();
+            foreach (var i in solution)
+            {
+                builder.Append(i);
+                builder.Append(" ");
+            }
+            return builder.ToString();
         }
 
         private void resetPlot()
@@ -67,7 +77,7 @@ namespace Gui
             {
                 showEmptyNetworkMessage();
                 return;
-            }         
+            }
             var parameters = new Optimization.OptimizationParameters
             {
                 ScoutCount = ScoutCount.Value,

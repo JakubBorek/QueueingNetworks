@@ -20,10 +20,26 @@
             <local:NumericUpDownWithCaption x:Name="BestCount" Caption="Best solutions:"/>
             <local:NumericUpDownWithCaption x:Name="ProcessorMaxCount" Caption="Max processors:"/>
         </StackPanel>
-        <oxy:Plot Name="Plot" Title="Fitness of best" Grid.Column="1">
-            <oxy:Plot.Series>
-                <oxy:LineSeries Name="LineSeries"/>
-            </oxy:Plot.Series>
-        </oxy:Plot>
+        <Grid Grid.Column="1">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+            <oxy:Plot Name="Plot" Title="Fitness of best" Grid.Row="0">
+                <oxy:Plot.Series>
+                    <oxy:LineSeries Name="LineSeries"/>
+                </oxy:Plot.Series>
+            </oxy:Plot>
+            <Border Grid.Row="1" Background="GhostWhite" BorderBrush="Silver" BorderThickness="1">
+                <StackPanel Orientation="Vertical">
+                    <StackPanel Orientation="Horizontal">
+                        <Label FontSize="20" FontWeight="Bold">Best solution:</Label>
+                        <Label Name="SolutionLabel" FontSize="20"/>
+                    </StackPanel>
+                    <Label FontSize="12" Foreground="#B2000000">For detailed information view GraphEditor tab</Label>
+                </StackPanel>
+            </Border>
+
+        </Grid>
     </Grid>
 </UserControl>

@@ -9,14 +9,6 @@ namespace Optimization
 {
     public interface IProgressReporter
     {
-        void ReportProgress(double fitness, int[] solution);
-    }
-
-    public class ProgressReporterStub : IProgressReporter
-    {
-        public void ReportProgress(double fitness, int[] solution)
-        {
-            Console.WriteLine(fitness);
-        }
+        void ReportProgress(double fitness, int[] solution, double[][] kir);
     }
 }
