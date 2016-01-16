@@ -23,13 +23,25 @@ namespace Gui
             if (result == true)
             {
                 string filename = dlg.FileName;
-                var reader = new System.IO.StreamReader(filename);
-                var network = QueueingNetworks.Network.Read(reader);
-                reader.Close();
-                var editable = NetworkConverter.NetworkToNodes(network);
-                GraphEditor.Nodes = editable.Item1;
-                GraphEditor.ClassCounts = editable.Item2;
+                try
+                {
+                    tryReadingFile(filename);
+                }
+                catch
+                {
+                    MessageBox.Show("This is not a valid queueing network file");
+                }
             }
+        }
+
+        void tryReadingFile(string filename)
+        {
+            var reader = new System.IO.StreamReader(filename);
+            var network = QueueingNetworks.Network.Read(reader);
+            reader.Close();
+            var editable = NetworkConverter.NetworkToNodes(network);
+            GraphEditor.Nodes = editable.Item1;
+            GraphEditor.ClassCounts = editable.Item2;
         }
 
         private void onSaveClicked(object sender, RoutedEventArgs e)

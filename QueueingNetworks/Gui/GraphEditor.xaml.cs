@@ -20,6 +20,7 @@ namespace Gui
                 if (selectedNode != null) { selectedNode.Selected = false; }
                 selectedNode = value;
                 if (selectedNode != null) { selectedNode.Selected = true; }
+                NotifyPropertyChanged("SelectedNodeType");
             }
         }
 
@@ -52,6 +53,24 @@ namespace Gui
             {
                 return GraphBuilder.FromNodes(Nodes);
             }
+        }
+
+        public int SelectedNodeType
+        {
+            get { return selectedNode != null ? selectedNode.Type == Node.NodeType.Type1 ? 0 : 1 : -1; }
+            set
+            {
+                if (value == 0)
+                {
+                    selectedNode.Type = Node.NodeType.Type1;
+                }
+                else if (value == 1)
+                {
+                    selectedNode.Type = Node.NodeType.Type3;
+                }
+                NotifyPropertyChanged("SelectedNodeType");
+            }
+
         }
 
         public GraphEditor()
@@ -104,6 +123,7 @@ namespace Gui
             SelectedNode = node;
             updateConnectionsList();
             updateMiList();
+            NotifyPropertyChanged("SelectedNodeType");
             NotifyPropertyChanged("SelectedNodeLabel");
             NotifyPropertyChanged("IsNodeSelected");
         }
@@ -116,6 +136,7 @@ namespace Gui
                 updateMiList();
             }
             updateClassCountsList();
+            NotifyPropertyChanged("SelectedNodeType");
             NotifyPropertyChanged("SelectedNodeLabel");
             NotifyPropertyChanged("IsNodeSelected");
             NotifyPropertyChanged("Graph");
@@ -125,7 +146,7 @@ namespace Gui
         {
             ConnectionsStackPanel.Children.Clear();
             var nodeFromId = new NodeFromIdProvider(Nodes);
-            var list = ConnectionListBuilder.FromNode(SelectedNode, nodeFromId, refresh);
+            var list = NodePropertiesBuilder.FromNode(SelectedNode, nodeFromId, refresh);
             foreach (var e in list)
             {
                 ConnectionsStackPanel.Children.Add(e);

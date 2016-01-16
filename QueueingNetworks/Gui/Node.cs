@@ -14,9 +14,24 @@ namespace Gui
         public Node()
         {
             Connections = new List<Connection>();
-            Mi = new List<double>() { 0 };
+            Mi = new List<double>() { 1 };
+            type = NodeType.Type1;
 
         }
+
+        public enum NodeType { Type1, Type3 };
+        private NodeType type;
+        public NodeType Type
+        {
+            get { return type; }
+            set
+            {
+                type = value;
+                NotifyPropertyChanged("Type");
+            }
+        }
+
+
         private bool selected;
         public bool Selected
         {
@@ -48,7 +63,7 @@ namespace Gui
         {
             while (Mi.Count < length)
             {
-                Mi.Add(0);
+                Mi.Add(1);
             }
 
             while (Mi.Count > length)

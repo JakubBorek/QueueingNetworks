@@ -31,7 +31,7 @@ namespace Gui
 
         private static UIElement getCountUpDown(List<int> counts, int id)
         {
-            var upDown = new IntegerUpDown() { Minimum = 0 };
+            var upDown = new IntegerUpDown() { Minimum = 1 };
             upDown.Value = counts[id];
             upDown.ValueChanged += (_1, _2) =>
             {

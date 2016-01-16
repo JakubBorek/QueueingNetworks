@@ -7,7 +7,7 @@ using Xceed.Wpf.Toolkit;
 
 namespace Gui
 {
-    static class ConnectionListBuilder
+    static class NodePropertiesBuilder
     {
         public static List<UIElement> FromNode(Node node, NodeFromIdProvider nodeFromId, Action refreshAction)
         {
@@ -40,8 +40,11 @@ namespace Gui
             upDown.Value = int.Parse(connection.To.Name);
             upDown.ValueChanged += (_1, _2) =>
             {
-                connection.To = nodeFromId.FromId((int)upDown.Value);
-                refreshAction();
+                if (upDown.Value != null)
+                {
+                    connection.To = nodeFromId.FromId((int)upDown.Value);
+                    refreshAction();
+                }
             };
             return upDown;
         }
@@ -52,7 +55,7 @@ namespace Gui
             upDown.Value = connection.Weight;
             upDown.ValueChanged += (_1, _2) =>
             {
-                connection.Weight = (double)upDown.Value;
+                connection.Weight = upDown.Value ?? 0;
             };
             return upDown;
         }
@@ -63,7 +66,7 @@ namespace Gui
             upDown.Value = connection.Class;
             upDown.ValueChanged += (_1, _2) =>
             {
-                connection.Class = (int)upDown.Value;
+                connection.Class = upDown.Value ?? 0;
             };
             return upDown;
         }

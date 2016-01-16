@@ -26,6 +26,7 @@
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="Auto" />
             <ColumnDefinition Width="240" />
         </Grid.ColumnDefinitions>
         <zoom:ZoomControl Grid.Column="0">
@@ -36,8 +37,13 @@
                               HighlightAlgorithmType="Simple"
                                     />
         </zoom:ZoomControl>
-        <StackPanel Orientation="Vertical" Grid.Column="1" Background="GhostWhite">
+        <Separator Style="{StaticResource {x:Static ToolBar.SeparatorStyleKey}}" Margin="10" Grid.Column="1"/>
+        <StackPanel Orientation="Vertical" Grid.Column="2">
             <TextBlock Text="{Binding ElementName=root, Path=SelectedNodeLabel, Mode=OneWay}" FontSize="24"/>
+            <ComboBox Text="Type" Name="TypeComboBox" IsEnabled="{Binding ElementName=root, Path=IsNodeSelected}"  Margin="5,10,5,5" SelectedIndex="{Binding ElementName=root, Path=SelectedNodeType}">
+                <ComboBoxItem Name="Type1">Type 1</ComboBoxItem>
+                <ComboBoxItem Name="Type3">Type 3</ComboBoxItem>
+            </ComboBox>
             <Expander Header="Connections" IsEnabled="{Binding ElementName=root, Path=IsNodeSelected}">
                 <StackPanel Orientation="Vertical" Name="ConnectionsStackPanel">
                 </StackPanel>
@@ -45,8 +51,9 @@
             <Expander Header="Mi" IsEnabled="{Binding ElementName=root, Path=IsNodeSelected}">
                 <StackPanel Orientation="Vertical" Name="MiStackPanel"/>
             </Expander>
-            <Button Content="Add node" Click="onAddNewClicked"/>
-            <Button Content="Delete last node" Click="onDeleteClicked"/>
+
+            <Button Content="Add node" Click="onAddNewClicked" Margin="5,30,5,3"/>
+            <Button Content="Delete last node" Click="onDeleteClicked" Margin="5,0,5,0"/>
             <Expander Header="Class Count">
                 <StackPanel Orientation="Vertical" Name="ClassCountStackPanel"/>
             </Expander>
