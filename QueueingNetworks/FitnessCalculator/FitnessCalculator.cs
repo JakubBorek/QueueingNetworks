@@ -27,7 +27,7 @@ namespace FitnessCalculator
             }
           
         }
-        public double CalculateFitness(int[] solution)
+        public Tuple<double,double []> CalculateFitness(int[] solution)
         {
             //TO DO: Przeniesc do konstruktora + refactor
             double[,] macierzE = new double[liczbaWezlow * liczbaKlas, liczbaWezlow * liczbaKlas];
@@ -93,13 +93,13 @@ namespace FitnessCalculator
             rhoIR = liczenieRhoIR(solution, lambdaIR);
             rhoI = liczenieRhoI(rhoIR);
             Pmi = liczeniePmi(solution, rhoI);
-            kIR = liczenieKIR(solution, rhoIR, rhoI, K, Pmi); //TO DO: To musi być w GUI
+            kIR = liczenieKIR(solution, rhoIR, rhoI, K, Pmi);
             kR = liczenieSumKir(kIR);
             niezajeteI = liczbaNieZajetychKanalowWStacji(rhoI, solution);
             pi0I = prawdopodobodobienstwoPi0I(solution, rhoI);
             srDlKolejkiI = sredniaDlugoscKolejkiI(solution, rhoI, pi0I);
 
-            return funkcjaCelu(srDlKolejkiI, niezajeteI);
+            return Tuple.Create(funkcjaCelu(srDlKolejkiI, niezajeteI),kIR);
         }
 
         public double[] GaussaSeidela(double[,] A, double[] b, int n, double eps)
