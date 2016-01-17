@@ -32,7 +32,7 @@
         <zoom:ZoomControl Grid.Column="0">
             <local:GraphLayout  x:Name="graphLayout"
                               Graph="{Binding ElementName=root,Path=Graph}"
-                              LayoutAlgorithmType="ISOM"  
+                              LayoutAlgorithmType="FR"  
                               OverlapRemovalAlgorithmType="FSA"
                               HighlightAlgorithmType="Simple"
                                     />

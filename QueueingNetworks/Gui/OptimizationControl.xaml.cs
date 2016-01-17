@@ -21,7 +21,7 @@ namespace Gui
     /// </summary>
     public partial class OptimizationControl : UserControl, Optimization.IProgressReporter
     {
-        private int nextPointIndex;
+        private double nextPointX;
 
         public IList<OxyPlot.DataPoint> PlotPoints { get; private set; }
         public OptimizationControl()
@@ -44,15 +44,16 @@ namespace Gui
 
         public void ReportProgress(double fitness, int[] solution, double[][] kir)
         {
-            PlotPoints.Add(new OxyPlot.DataPoint(nextPointIndex, fitness));
+            PlotPoints.Add(new OxyPlot.DataPoint(nextPointX, fitness));
             var solutionText = getSolutionText(solution);
             this.Dispatcher.Invoke(() =>
             {
                 SolutionLabel.Content = solutionText;
+                updateFitness(fitness);
                 updateKir(kir);
                 Plot.InvalidatePlot();
             });
-            nextPointIndex++;
+            nextPointX += 0.5;
         }
 
         private void updateKir(double[][] kir)
@@ -63,7 +64,10 @@ namespace Gui
             {
                 KirStackPanel.Children.Add(e);
             }
-
+        }
+        private void updateFitness(double fitness)
+        {
+            FitnessLabel.Content = fitness;
         }
         private string getSolutionText(int[] solution)
         {
@@ -79,7 +83,7 @@ namespace Gui
         private void resetPlot()
         {
             PlotPoints.Clear();
-            nextPointIndex = 0;
+            nextPointX = 0;
         }
         private void onStartOptimizationClicked(object sender, RoutedEventArgs e)
         {
