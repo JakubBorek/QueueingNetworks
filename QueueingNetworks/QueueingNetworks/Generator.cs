@@ -22,7 +22,7 @@ namespace QueueingNetworks
             for (int i = 0; i < nodesCount; i++)
             {
                 var mis = generateMis(classCount, random);
-                var connections = generateConnections(nodesCount, classCount, connectionsCount, random);
+                var connections = generateConnections(nodesCount, classCount, connectionsCount, random, i);
                 nodes.Add(new Node(i, Node.NodeType.Type1, mis, connections));
             }
             return nodes;
@@ -51,27 +51,27 @@ namespace QueueingNetworks
             return mis;
         }
 
-        private static List<Connection> generateConnections(int nodeCount, int classCount, int connectionsCount, Random random)
+        private static List<Connection> generateConnections(int nodeCount, int classCount, int connectionsCount, Random random, int nodeId)
         {
             var connections = new List<Connection>(connectionsCount * classCount);
             double connectionWeight = 1.0 / connectionsCount;
 
             for (int c = 0; c < classCount; c++)
             {
-                var destinations = generateUniqueRandom(nodeCount, connectionsCount, random);
+                var destinations = generateUniqueRandom(nodeCount, nodeId, connectionsCount, random);
                 destinations.ForEach(d =>
                     connections.Add(new Connection(d, c, connectionWeight)));
             }
             return connections;
         }
 
-        private static List<int> generateUniqueRandom(int maxValue, int count, Random random)
+        private static List<int> generateUniqueRandom(int maxValue, int notThis, int count, Random random)
         {
             var list = new List<int>(count);
             while (list.Count != count)
             {
                 var value = random.Next(0, maxValue);
-                if (!list.Contains(value))
+                if (!list.Contains(value) && value != notThis)
                 {
                     list.Add(value);
                 }
