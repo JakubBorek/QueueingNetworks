@@ -56,7 +56,7 @@ namespace Optimization
                 matrix[n] = new double[classCount];
                 for (int c = 0; c < classCount; c++)
                 {
-                    matrix[n][c] = kir[c * classCount + n];
+                    matrix[n][c] = kir[c * nodesCount + n];
                 }
             }
             return matrix;

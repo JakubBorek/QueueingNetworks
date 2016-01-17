@@ -110,7 +110,6 @@ namespace FitnessCalculator
             niezajeteI = liczbaNieZajetychKanalowWStacji(rhoI, solution);
             pi0I = prawdopodobodobienstwoPi0I(solution, rhoI);
             srDlKolejkiI = sredniaDlugoscKolejkiI(solution, rhoI, pi0I);
-
             return Tuple.Create(funkcjaCelu(srDlKolejkiI, niezajeteI),kIR);
         }
 
