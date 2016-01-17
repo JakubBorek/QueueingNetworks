@@ -41,6 +41,10 @@ namespace Optimization
                 {
                     var solution = BeesAlgorithm.BestSolution;
                     var kirMatrix = sanitizeKirVector(solution.Item3, solution.Item1.Count());
+                    if (solution.Item1.All(s => s == 4))
+                    {
+
+                    }
                     parameters.ProgressReporter.ReportProgress(solution.Item2, solution.Item1, kirMatrix);
                     Thread.Sleep(500);
                 }

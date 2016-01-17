@@ -33,7 +33,10 @@ namespace Optimization
             while (!isStopConditionFulfilled())
             {
                 var bestFlower = scouts.First().getFlower();
-                BestSolution = Tuple.Create((int[])bestFlower.getSolution().Clone(), bestFlower.getSolutionValue(), bestFlower.Kir);
+                if (BestSolution == null || bestFlower.getSolutionValue() < BestSolution.Item2)
+                {
+                    BestSolution = Tuple.Create((int[])bestFlower.getSolution().Clone(), bestFlower.getSolutionValue(), bestFlower.Kir);
+                }
                 //wybieramy elitarnych Skautów - s¹ to Skauci z elitarnymi kwiatami 
                 List<Scout> scoutsWithEliteFlowers = scouts.GetRange(0, elisteSolutionsAmount);
                 //wybieramy najlpeszych Skautów - s¹ to Skauci z najlepszymi kwiatami 
@@ -47,6 +50,10 @@ namespace Optimization
                 // Dla najgorszych kwiatów generujemy nowe
                 Utilities.sendScouts(restOfScouts);
                 //Sortujemy wszystkie kwiaty pod wzglêdem atrakcyjnoœci 
+                foreach (var s in scouts)
+                {
+                    s.getFlower().computeSolutionValue();
+                }
                 scouts.Sort();
             }
             Running = false;

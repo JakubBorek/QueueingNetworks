@@ -40,7 +40,7 @@ namespace Optimization
             return flower;
         }
 
-        private void computeSolutionValue()
+        public void computeSolutionValue()
         {
             var fitness = BeesAlgorithm.FitnessCalculator.CalculateFitness(solution);
             setSolutionValue(fitness.Item1);
