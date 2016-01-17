@@ -111,6 +111,14 @@ namespace FitnessCalculator
             pi0I = prawdopodobodobienstwoPi0I(solution, rhoI);
             srDlKolejkiI = sredniaDlugoscKolejkiI(solution, rhoI, pi0I);
 
+            for(int i = 0; i < liczbaWezlow; i++)
+            {
+                if (pi0I[i] < 0)
+                {
+                    return Tuple.Create(double.PositiveInfinity, kIR);
+                }       
+            }
+
             return Tuple.Create(funkcjaCelu(srDlKolejkiI, niezajeteI),kIR);
         }
 
