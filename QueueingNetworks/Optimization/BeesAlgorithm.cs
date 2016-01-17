@@ -28,7 +28,7 @@ namespace Optimization
             Utilities.sendScouts(scouts);
             // Sortujemy skautów pod wzglêdem atrakcyjnoœci kwwiatów, które znaleŸli
             scouts.Sort();
-
+            BestSolution = null;
             Running = true;
             while (!isStopConditionFulfilled())
             {

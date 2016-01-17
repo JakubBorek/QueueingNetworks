@@ -7,22 +7,22 @@ using System.Threading.Tasks;
 namespace QueueingNetworks
 {
     public static class Generator
-    {/*
+    {
         public static Network GenerateAllConnected(int nodesCount, int classCount, int minElementsPerClass, int maxElementsPerClass, int connectionsCount)
         {
-            var nodes = generateNodes(connections, nodesCount, classCount);
+            var nodes = generateNodes(nodesCount, classCount, connectionsCount);
             var counts = generateClassCounts(classCount, minElementsPerClass, maxElementsPerClass);
             return new Network(nodes, counts);
         }
 
-        private static List<Node> generateNodes(int nodesCount, int classCount)
+        private static List<Node> generateNodes(int nodesCount, int classCount, int connectionsCount)
         {
             var nodes = new List<Node>(nodesCount);
             Random random = new Random();
             for (int i = 0; i < nodesCount; i++)
             {
                 var mis = generateMis(classCount, random);
-                var connections = generateConnections(nodesCount, classCount);
+                var connections = generateConnections(nodesCount, classCount, connectionsCount, random);
                 nodes.Add(new Node(i, Node.NodeType.Type1, mis, connections));
             }
             return nodes;
@@ -51,18 +51,32 @@ namespace QueueingNetworks
             return mis;
         }
 
-        private static List<Connection> generateConnections(int nodeCount, int classCount, int connectionsCount)
+        private static List<Connection> generateConnections(int nodeCount, int classCount, int connectionsCount, Random random)
         {
-            var connections = new List<Connection>(nodeCount * classCount);
-            double connectionWeight = 1.0 / nodeCount;
-            for (int n = 0; n < nodeCount; n++)
+            var connections = new List<Connection>(connectionsCount * classCount);
+            double connectionWeight = 1.0 / connectionsCount;
+
+            for (int c = 0; c < classCount; c++)
             {
-                for (int c = 0; c < classCount; c++)
-                {
-                    connections.Add(new Connection(n, c, connectionWeight));
-                }
+                var destinations = generateUniqueRandom(nodeCount, connectionsCount, random);
+                destinations.ForEach(d =>
+                    connections.Add(new Connection(d, c, connectionWeight)));
             }
             return connections;
-        }*/
+        }
+
+        private static List<int> generateUniqueRandom(int maxValue, int count, Random random)
+        {
+            var list = new List<int>(count);
+            while (list.Count != count)
+            {
+                var value = random.Next(0, maxValue);
+                if (!list.Contains(value))
+                {
+                    list.Add(value);
+                }
+            }
+            return list;
+        }
     }
 }

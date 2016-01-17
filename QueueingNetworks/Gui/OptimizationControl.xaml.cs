@@ -46,13 +46,17 @@ namespace Gui
         {
             PlotPoints.Add(new OxyPlot.DataPoint(nextPointX, fitness));
             var solutionText = getSolutionText(solution);
-            this.Dispatcher.Invoke(() =>
+            try
             {
-                SolutionLabel.Content = solutionText;
-                updateFitness(fitness);
-                updateKir(kir);
-                Plot.InvalidatePlot();
-            });
+                Dispatcher.Invoke(() =>
+                {
+                    SolutionLabel.Content = solutionText;
+                    updateFitness(fitness);
+                    updateKir(kir);
+                    Plot.InvalidatePlot();
+                });
+            }
+            catch (TaskCanceledException) { }
             nextPointX += 0.5;
         }
 

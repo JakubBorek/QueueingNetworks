@@ -5,13 +5,14 @@
         xmlns:zoom="clr-namespace:WPFExtensions.Controls;assembly=WPFExtensions"
         xmlns:local="clr-namespace:Gui"
         xmlns:Controls="http://metro.mahapps.com/winfx/xaml/controls"
-        Title="Queueing networks" Height="500" Width="900" x:Name="root">
+        Title="Queueing networks" Height="600" Width="900" x:Name="root">
     <TabControl>
         <TabItem Header="General ">
             <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
                 <Button Content="Load from file" Click="onLoadClicked" FontSize="48" Width="500" Height="100" Margin="10"/>
                 <Button Content="Save to file" Click="onSaveClicked" FontSize="48" Width="500" Height="100" Margin="10"/>
                 <Button Content="New" Click="onNewClicked" FontSize="48" Width="500" Height="100" Margin="10"/>
+                <Button Content="Random" Click="onRandomClicked" FontSize="48" Width="500" Height="100" Margin="10"/>
             </StackPanel>
         </TabItem>
         <TabItem Header="Graph editor ">

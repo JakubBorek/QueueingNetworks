@@ -21,13 +21,13 @@ namespace FitnessCalculator
             liczbaKlas = network.ClassCount;
             K = 0;
 
-            for (int i=0; i < liczbaKlas; i++)
+            for (int i = 0; i < liczbaKlas; i++)
             {
                 K = K + network.ClassMembersCounts[i];
             }
-          
+
         }
-        public Tuple<double,double []> CalculateFitness(int[] solution)
+        public Tuple<double, double[]> CalculateFitness(int[] solution)
         {
             //TO DO: Przeniesc do konstruktora + refactor
             double[,] macierzE = new double[liczbaWezlow * liczbaKlas, liczbaWezlow * liczbaKlas];
@@ -49,16 +49,16 @@ namespace FitnessCalculator
             double wartBlad;
             double epsilon = 0.00001;
 
-            for(int i = 0; i < liczbaWezlow; i++)
+            for (int i = 0; i < liczbaWezlow; i++)
             {
-                if(network.Nodes[i].Type == QueueingNetworks.Node.NodeType.Type1)
+                if (network.Nodes[i].Type == QueueingNetworks.Node.NodeType.Type1)
                 {
                     if (solution[i] >= K)
                     {
                         return Tuple.Create(double.PositiveInfinity, kIR);
                     }
                 }
-                
+
             }
 
             for (int i = 0; i < liczbaKlas; i++)
@@ -66,12 +66,12 @@ namespace FitnessCalculator
                 lambdaR1[i] = 0.00001;
             }
 
-            for (int i = 0; i < liczbaKlas*liczbaWezlow; i++)
+            for (int i = 0; i < liczbaKlas * liczbaWezlow; i++)
             {
                 if (i % liczbaWezlow == 0)
                 {
                     wyrazyWolne[i] = 1;
-                }       
+                }
             }
 
 
@@ -111,15 +111,21 @@ namespace FitnessCalculator
             pi0I = prawdopodobodobienstwoPi0I(solution, rhoI);
             srDlKolejkiI = sredniaDlugoscKolejkiI(solution, rhoI, pi0I);
 
-            for(int i = 0; i < liczbaWezlow; i++)
+            for (int i = 0; i < liczbaWezlow; i++)
             {
                 if (pi0I[i] < 0)
                 {
                     return Tuple.Create(double.PositiveInfinity, kIR);
-                }       
+                }
             }
 
-            return Tuple.Create(funkcjaCelu(srDlKolejkiI, niezajeteI),kIR);
+            var value = funkcjaCelu(srDlKolejkiI, niezajeteI);
+            if (double.IsNaN(value))
+            {
+                value = double.PositiveInfinity;
+            }
+
+            return Tuple.Create(value, kIR);
         }
 
         public double[] GaussaSeidela(double[,] A, double[] b, int n, double eps)
@@ -235,7 +241,7 @@ namespace FitnessCalculator
 
             for (int i = 0; i < liczbaWezlow * liczbaKlas; i++)
             {
-                rhoIR[i] = lambdaIR[i] / (network.Nodes[i%liczbaWezlow].Mi[i/liczbaWezlow] * m[i % liczbaWezlow]);
+                rhoIR[i] = lambdaIR[i] / (network.Nodes[i % liczbaWezlow].Mi[i / liczbaWezlow] * m[i % liczbaWezlow]);
             }
 
             return rhoIR;
@@ -278,19 +284,19 @@ namespace FitnessCalculator
                 {
                     Pmi[i] = 0;
                 }
-                    
+
             }
 
             return Pmi;
         }
 
-        public double[] liczenieKIR(int[]m,double[] rhoIR, double[] rho, int K, double[] Pmi, double[] lambdaIR)
+        public double[] liczenieKIR(int[] m, double[] rhoIR, double[] rho, int K, double[] Pmi, double[] lambdaIR)
         {
             double[] kIR = new double[liczbaWezlow * liczbaKlas];
 
             for (int i = 0; i < liczbaWezlow * liczbaKlas; i++)
             {
-                if(network.Nodes[i % liczbaWezlow].Type == QueueingNetworks.Node.NodeType.Type1)
+                if (network.Nodes[i % liczbaWezlow].Type == QueueingNetworks.Node.NodeType.Type1)
                 {
                     if (m[i % liczbaWezlow] == 1)
                     {
@@ -305,7 +311,7 @@ namespace FitnessCalculator
                 else
                 {
                     kIR[i] = lambdaIR[i] / network.Nodes[i % liczbaWezlow].Mi[i / liczbaWezlow];
-                } 
+                }
             }
 
             return kIR;
@@ -346,7 +352,7 @@ namespace FitnessCalculator
                 {
                     fixIR[i] = eIR[i] / network.Nodes[i % liczbaWezlow].Mi[i / liczbaWezlow];
                 }
-                    
+
 
             }
 
@@ -430,7 +436,7 @@ namespace FitnessCalculator
                 {
                     pi0I[i] = 0;
                 }
-                    
+
             }
 
             return pi0I;

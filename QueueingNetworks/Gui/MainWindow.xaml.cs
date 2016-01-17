@@ -62,12 +62,17 @@ namespace Gui
         }
 
         private void onNewClicked(object sender, RoutedEventArgs e)
-        {/*
-            //GraphEditor.Nodes = new List<Node>();
-            var network = QueueingNetworks.Generator.GenerateAllConnected(15, 4, 10, 20);
+        {
+            GraphEditor.Nodes = new List<Node>();
+            GraphEditor.ClassCounts = new List<int> { 1 };
+        }
+
+        private void onRandomClicked(object sender, RoutedEventArgs e)
+        {
+            var network = QueueingNetworks.Generator.GenerateAllConnected(nodesCount: 10, classCount: 4, minElementsPerClass: 10, maxElementsPerClass: 20, connectionsCount: 2);
             var editable = NetworkConverter.NetworkToNodes(network);
             GraphEditor.Nodes = editable.Item1;
-            GraphEditor.ClassCounts = editable.Item2;*/
+            GraphEditor.ClassCounts = editable.Item2;
         }
 
     }
