@@ -49,6 +49,18 @@ namespace FitnessCalculator
             double wartBlad;
             double epsilon = 0.00001;
 
+            for(int i = 0; i < liczbaWezlow; i++)
+            {
+                if(network.Nodes[i].Type == QueueingNetworks.Node.NodeType.Type1)
+                {
+                    if (solution[i] >= K)
+                    {
+                        return Tuple.Create(double.PositiveInfinity, kIR);
+                    }
+                }
+                
+            }
+
             for (int i = 0; i < liczbaKlas; i++)
             {
                 lambdaR1[i] = 0.00001;
@@ -78,7 +90,7 @@ namespace FitnessCalculator
                 rhoIR = liczenieRhoIR(solution, lambdaIR);
                 rhoI = liczenieRhoI(rhoIR);
                 Pmi = liczeniePmi(solution, rhoI);
-                kIR = liczenieKIR(solution, rhoIR, rhoI, K, Pmi); //  tylko debug
+                kIR = liczenieKIR(solution, rhoIR, rhoI, K, Pmi, lambdaIR); //  tylko debug
                 kR = liczenieSumKir(kIR);                         //  tylko debug
                 fixIR = liczeniefixIR(eIR, rhoIR, rhoI, K, Pmi, solution);
                 fixR = liczenieSumFixR(fixIR);
@@ -93,7 +105,7 @@ namespace FitnessCalculator
             rhoIR = liczenieRhoIR(solution, lambdaIR);
             rhoI = liczenieRhoI(rhoIR);
             Pmi = liczeniePmi(solution, rhoI);
-            kIR = liczenieKIR(solution, rhoIR, rhoI, K, Pmi);
+            kIR = liczenieKIR(solution, rhoIR, rhoI, K, Pmi, lambdaIR);
             kR = liczenieSumKir(kIR);
             niezajeteI = liczbaNieZajetychKanalowWStacji(rhoI, solution);
             pi0I = prawdopodobodobienstwoPi0I(solution, rhoI);
@@ -241,37 +253,51 @@ namespace FitnessCalculator
 
             for (int i = 0; i < liczbaWezlow; i++)
             {
-                tempSum = 0;
-                for (int k = 0; k <= m[i] - 1; k++)
+                if (network.Nodes[i % liczbaWezlow].Type == QueueingNetworks.Node.NodeType.Type1)
                 {
-                    tempSum = tempSum + Math.Pow(m[i] * rho[i], k) / silnia(k);
-                                
-                }
+                    tempSum = 0;
+                    for (int k = 0; k <= m[i] - 1; k++)
+                    {
+                        tempSum = tempSum + Math.Pow(m[i] * rho[i], k) / silnia(k);
 
-                Pmi[i] = (Math.Pow(rho[i] * m[i], m[i]) / (silnia(m[i]) * (1 - rho[i]))) *
-                            (1 / (tempSum + (Math.Pow(m[i] * rho[i], m[i]) / silnia(m[i])) *
-                                    (1 / (1 - rho[i]))));
+                    }
+
+                    Pmi[i] = (Math.Pow(rho[i] * m[i], m[i]) / (silnia(m[i]) * (1 - rho[i]))) *
+                                (1 / (tempSum + (Math.Pow(m[i] * rho[i], m[i]) / silnia(m[i])) *
+                                        (1 / (1 - rho[i]))));
+                }
+                else
+                {
+                    Pmi[i] = 0;
+                }
+                    
             }
 
             return Pmi;
         }
 
-        public double[] liczenieKIR(int[]m,double[] rhoIR, double[] rho, int K, double[] Pmi)
+        public double[] liczenieKIR(int[]m,double[] rhoIR, double[] rho, int K, double[] Pmi, double[] lambdaIR)
         {
             double[] kIR = new double[liczbaWezlow * liczbaKlas];
 
             for (int i = 0; i < liczbaWezlow * liczbaKlas; i++)
             {
-                if (m[i % liczbaWezlow] == 1)
+                if(network.Nodes[i % liczbaWezlow].Type == QueueingNetworks.Node.NodeType.Type1)
                 {
-                    kIR[i] = rhoIR[i] / (1 - (((K - 1) / K) * rho[i % liczbaWezlow]));
+                    if (m[i % liczbaWezlow] == 1)
+                    {
+                        kIR[i] = rhoIR[i] / (1 - (((K - 1) / K) * rho[i % liczbaWezlow]));
+                    }
+                    else
+                    {
+                        kIR[i] = m[i % liczbaWezlow] * rhoIR[i] +
+                                    (rhoIR[i] / (1 - (((K - m[i % liczbaWezlow] - 1) / (K - m[i % liczbaWezlow])) * rho[i % liczbaWezlow]))) * Pmi[i % liczbaWezlow];
+                    }
                 }
                 else
                 {
-                    kIR[i] = m[i % liczbaWezlow] * rhoIR[i] +
-                                (rhoIR[i] / (1 - (((K - m[i % liczbaWezlow] - 1) / (K - m[i % liczbaWezlow])) * rho[i % liczbaWezlow]))) * Pmi[i % liczbaWezlow];
-                }
-
+                    kIR[i] = lambdaIR[i] / network.Nodes[i % liczbaWezlow].Mi[i / liczbaWezlow];
+                } 
             }
 
             return kIR;
@@ -295,16 +321,24 @@ namespace FitnessCalculator
 
             for (int i = 0; i < liczbaWezlow * liczbaKlas; i++)
             {
-                if (m[i % liczbaWezlow] == 1)
+                if (network.Nodes[i % liczbaWezlow].Type == QueueingNetworks.Node.NodeType.Type1)
                 {
-                    fixIR[i] = (eIR[i] / network.Nodes[i % liczbaWezlow].Mi[i / liczbaWezlow]) / (1 - (((K - 1) / K) * rho[i % liczbaWezlow]));
+                    if (m[i % liczbaWezlow] == 1)
+                    {
+                        fixIR[i] = (eIR[i] / network.Nodes[i % liczbaWezlow].Mi[i / liczbaWezlow]) / (1 - (((K - 1) / K) * rho[i % liczbaWezlow]));
+                    }
+                    else
+                    {
+                        fixIR[i] = (eIR[i] / network.Nodes[i % liczbaWezlow].Mi[i / liczbaWezlow]) +
+                                    ((eIR[i] / (m[i % liczbaWezlow] * network.Nodes[i % liczbaWezlow].Mi[i / liczbaWezlow])) /
+                                        (1 - (((K - m[i % liczbaWezlow] - 1) / (K - m[i % liczbaWezlow])) * rho[i % liczbaWezlow]))) * Pmi[i % liczbaWezlow];
+                    }
                 }
                 else
                 {
-                    fixIR[i] = (eIR[i] / network.Nodes[i % liczbaWezlow].Mi[i / liczbaWezlow]) +
-                                ((eIR[i] / (m[i % liczbaWezlow] * network.Nodes[i % liczbaWezlow].Mi[i / liczbaWezlow])) /
-                                    (1 - (((K - m[i % liczbaWezlow] - 1) / (K - m[i % liczbaWezlow])) * rho[i % liczbaWezlow]))) * Pmi[i % liczbaWezlow];
+                    fixIR[i] = eIR[i] / network.Nodes[i % liczbaWezlow].Mi[i / liczbaWezlow];
                 }
+                    
 
             }
 
@@ -355,7 +389,14 @@ namespace FitnessCalculator
 
             for (int i = 0; i < liczbaWezlow; i++)
             {
-                niezajeteI[i] = m[i] * (1 - rhoI[i]);
+                if (network.Nodes[i].Type == QueueingNetworks.Node.NodeType.Type1)
+                {
+                    niezajeteI[i] = m[i] * (1 - rhoI[i]);
+                }
+                else
+                {
+                    niezajeteI[i] = 0;
+                }
             }
 
             return niezajeteI;
@@ -368,12 +409,20 @@ namespace FitnessCalculator
 
             for (int i = 0; i < liczbaWezlow; i++)
             {
-                tempSum = 0;
-                for (int k = 0; k <= m[i] - 1; k++)
+                if (network.Nodes[i].Type == QueueingNetworks.Node.NodeType.Type1)
                 {
-                    tempSum = tempSum + Math.Pow(rhoI[i], k) / silnia(k);
+                    tempSum = 0;
+                    for (int k = 0; k <= m[i] - 1; k++)
+                    {
+                        tempSum = tempSum + Math.Pow(rhoI[i], k) / silnia(k);
+                    }
+                    pi0I[i] = 1 / (tempSum + (Math.Pow(rhoI[i], m[i])) / (silnia(m[i] - 1) * (m[i] - rhoI[i])));
                 }
-                pi0I[i] = 1 / (tempSum +(Math.Pow(rhoI[i], m[i])) / (silnia(m[i] - 1) * (m[i] - rhoI[i])));
+                else
+                {
+                    pi0I[i] = 0;
+                }
+                    
             }
 
             return pi0I;
@@ -386,7 +435,14 @@ namespace FitnessCalculator
 
             for (int i = 0; i < liczbaWezlow; i++)
             {
-                sredniaDlugoscKolejkiI[i] = (Math.Pow(rhoI[i], m[i] + 1) / (Math.Pow(m[i] - rhoI[i], 2) * silnia(m[i] - 1))) * pi0I[i];
+                if (network.Nodes[i].Type == QueueingNetworks.Node.NodeType.Type1)
+                {
+                    sredniaDlugoscKolejkiI[i] = (Math.Pow(rhoI[i], m[i] + 1) / (Math.Pow(m[i] - rhoI[i], 2) * silnia(m[i] - 1))) * pi0I[i];
+                }
+                else
+                {
+                    sredniaDlugoscKolejkiI[i] = 0;
+                }
             }
 
             return sredniaDlugoscKolejkiI;
