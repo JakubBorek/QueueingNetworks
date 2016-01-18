@@ -53,11 +53,7 @@ namespace Gui
             {
                 var distinctClassConnections = removeDuplicates(node.Connections.Where(conn => conn.Class - 1 == c).Where(conn => conn.Weight != 0));
                 var sum = distinctClassConnections.Sum(conn => conn.Weight);
-                if (sum == 0)
-                {
-                    list.Add(new QueueingNetworks.Connection(findIndex(node, allNodes), c, 1));
-                }
-                else
+                if (sum != 0)
                 {
                     double scale = 1 / sum;
                     list.AddRange(distinctClassConnections.Select(conn => new QueueingNetworks.Connection(findIndex(conn.To, allNodes), conn.Class - 1, conn.Weight * scale)));
