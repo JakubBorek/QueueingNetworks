@@ -113,7 +113,7 @@ namespace FitnessCalculator
 
             for (int i = 0; i < liczbaWezlow; i++)
             {
-                if (pi0I[i] < 0)
+                if (pi0I[i] < 0 || niezajeteI[i] < 0 || srDlKolejkiI[i] < 0)
                 {
                     return Tuple.Create(double.PositiveInfinity, kIR);
                 }
